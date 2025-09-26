@@ -6,7 +6,7 @@ import dj_database_url
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- CORE SETTINGS ---
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'a-default-secret-key-for-local-development')
 DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = []
@@ -46,9 +46,11 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.messages',
+                # **THIS IS THE LINE I FIXED**:
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -57,7 +59,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'aquaalert_project.wsgi.application'
 
 # --- DATABASE ---
-# Uses the free Postgres database from Render
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
