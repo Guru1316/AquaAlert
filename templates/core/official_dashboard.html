@@ -1,0 +1,166 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+    <header class="dashboard-header">
+        <h1>AquaAlert 💧 - Health Official Dashboard</h1>
+        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+    </header>
+    <main class="dashboard-grid">
+        <div class="grid-item map-container">
+            <h2>Live Health Cases (Last 48 Hours)</h2>
+            <div id="map"></div>
+        </div>
+        <div class="grid-item sidebar">
+            <div class="alerts-panel">
+                <h2>🚨 Real-Time Alerts</h2>
+                <ul id="alerts-list">
+                    <li class="alert-item alert-none">Loading data...</li>
+                </ul>
+            </div>
+            <div class="stats-panel">
+                <h2>📊 Village Health Snapshot</h2>
+                <div id="chart"></div>
+            </div>
+        </div>
+    </main>
+</div>
+<div id="qr-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Scan to Broadcast SMS</h2>
+        <p>Scan this QR code with your phone to open your SMS app with a pre-filled message for the residents of the affected village.</p>
+        <div id="qrcode"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+<script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- SECTION 1: INITIALIZE ELEMENTS ---
+    let chart = null;
+    const map = L.map('map').setView([26.2006, 92.9376], 7);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+    const markers = L.markerClusterGroup();
+    map.addLayer(markers);
+    const modal = document.getElementById('qr-modal');
+    const closeBtn = document.querySelector('.close-btn');
+    const qrcodeContainer = document.getElementById('qrcode');
+    const alertsList = document.getElementById('alerts-list');
+
+    // --- SECTION 2: DEFINE CORE FUNCTIONS ---
+    function showQrCodeModal(villageId) {
+        const villagePhoneNumbers = {
+            'mawlynnong_meghalaya': ['+919876543210', '+919876543211'],
+            'ziro_arunachal': ['+919123456780', '+919123456781'],
+            'majuli_assam': ['+917010802567', '+918825930927'],
+            'khonoma_nagaland': ['+919345678901', '+919345678902'],
+            'moirang_manipur': ['+919456789012', '+919456789013'],
+            'pelling_sikkim': ['+919567890123', '+919567890124'],
+            'champhai_mizoram': ['+919678901234', '+919678901235'],
+            'unakoti_tripura': ['+919789012345', '+919789012346']
+        };
+        const numbers = villagePhoneNumbers[villageId];
+        if (!numbers || !Array.isArray(numbers) || numbers.length === 0) {
+            alert('Error: No phone numbers are configured for this village.');
+            return;
+        }
+        try {
+            const message = `Health Alert! Cases of water-borne illness are rising in your area. Please boil all drinking water. A health team is on its way. \n\nस्वास्थ्य चेतावनी! आपके क्षेत्र में जलजनित बीमारी के मामले बढ़ रहे हैं। कृपया पीने का सारा पानी उबालें। एक स्वास्थ्य टीम रास्ते में है।`;
+            const smsUri = `sms:${numbers.join(',')}?body=${encodeURIComponent(message)}`;
+            
+            qrcodeContainer.innerHTML = ''; // Clear previous QR
+            
+            // **THE FIX**: Using the new library's method to generate the QR code
+            const typeNumber = 0; // 0 means auto-detect QR code size
+            const errorCorrectionLevel = 'L'; // 'L' for Low
+            const qr = qrcode(typeNumber, errorCorrectionLevel);
+            qr.addData(smsUri);
+            qr.make();
+            // createImgTag(cellSize, margin)
+            qrcodeContainer.innerHTML = qr.createImgTag(4, 8); 
+
+            modal.classList.remove('hidden');
+        } catch (e) {
+            console.error("QR Code generation failed:", e);
+            alert("An error occurred while generating the QR code.");
+        }
+    }
+
+    async function updateDashboard() {
+        try {
+            const response = await fetch('/api/dashboard-data/');
+            const data = await response.json();
+            // Update Alerts
+            alertsList.innerHTML = '';
+            if (data.alerts && data.alerts.length > 0) {
+                data.alerts.forEach(alert => {
+                    const li = document.createElement('li');
+                    li.className = `alert-item alert-${alert.type}`;
+                    li.innerHTML = `<p>${alert.message}</p><button class="broadcast-btn" data-village="${alert.village_id}">Broadcast SMS</button>`;
+                    alertsList.appendChild(li);
+                });
+            } else {
+                alertsList.innerHTML = '<li class="alert-item alert-none">No new alerts. System is monitoring...</li>';
+            }
+            // Update Map
+            markers.clearLayers();
+            if (data.map_report_data && data.map_report_data.length > 0) {
+                data.map_report_data.forEach(report => {
+                    const marker = L.circleMarker([report.lat, report.lng], {
+                        radius: 6, color: '#dc3545', fillColor: '#dc3545', fillOpacity: 0.7
+                    }).bindPopup(`<b>${report.village}</b><br>Symptoms: ${report.symptoms}`);
+                    markers.addLayer(marker);
+                });
+            }
+            // Update Chart
+            if (!data.chart_data || data.chart_data.labels.length === 0) {
+                document.getElementById('chart').innerHTML = "<p style='text-align:center;color:#6c757d;'>No case data to display.</p>";
+            } else if (!chart) {
+                chart = new frappe.Chart("#chart", {
+                    title: "Cases per Village (48h)", data: data.chart_data, type: 'bar',
+                    height: 250, colors: ['#007bff']
+                });
+            } else {
+                chart.update(data.chart_data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch dashboard data:", error);
+            alertsList.innerHTML = '<li class="alert-item alert-critical">Could not load dashboard data. Check console.</li>';
+        }
+    }
+
+    // --- SECTION 3: ATTACH EVENT LISTENERS ---
+    alertsList.addEventListener('click', function(event) {
+        if (event.target && event.target.classList.contains('broadcast-btn')) {
+            const villageId = event.target.dataset.village;
+            showQrCodeModal(villageId);
+        }
+    });
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.classList.add('hidden');
+        }
+    });
+
+    // --- SECTION 4: START THE APPLICATION ---
+    updateDashboard();
+    setInterval(updateDashboard, 10000);
+});
+</script>
+{% endblock %}

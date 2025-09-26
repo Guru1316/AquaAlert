@@ -1,0 +1,477 @@
+/* static/css/style.css */
+
+/* --- Global & Reset --- */
+:root {
+    --primary-blue: #007bff;
+    --primary-blue-dark: #0056b3;
+    --light-blue-bg: #f0f8ff;
+    --text-dark: #343a40;
+    --text-light: #6c757d;
+    --border-color: #dee2e6;
+    --white: #ffffff;
+    --error-red: #dc3545;
+    --success-green: #28a745;
+    --font-family: 'Poppins', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--light-blue-bg);
+    color: var(--text-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* --- Auth Page Styles --- */
+.auth-wrapper {
+    width: 100%;
+    padding: 20px;
+}
+
+.auth-container {
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-header h2 {
+    color: var(--primary-blue-dark);
+    font-weight: 700;
+}
+
+.form-header p {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: var(--font-family);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.auth-btn:hover {
+    background-color: var(--primary-blue-dark);
+}
+
+.form-toggle-text {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+}
+
+.form-toggle-text a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-toggle-text a:hover {
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Message / Error Styling */
+.messages {
+    list-style: none;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.messages .error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* static/css/style.css (append to end) */
+
+/* --- App Wrapper & Container --- */
+.app-wrapper {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+    padding: 20px;
+}
+
+.app-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+}
+
+.app-header h3 {
+    color: var(--primary-blue-dark);
+    margin: 0;
+}
+
+#user-welcome {
+    color: var(--text-light);
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+}
+
+.logout-btn {
+    background-color: var(--error-red);
+    color: white;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c82333;
+}
+
+/* --- Form Specifics --- */
+.symptoms-group {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.symptoms-group legend {
+    font-weight: 600;
+    padding: 0 10px;
+    color: var(--text-dark);
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.checkbox-grid div {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-grid input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+}
+
+.checkbox-grid label {
+    font-weight: 400;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--success-green);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 25px;
+}
+
+.submit-btn:hover {
+    background-color: #218838;
+}
+
+/* --- Sync Status --- */
+#sync-status {
+    text-align: center;
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.status-success { background-color: #d4edda; color: #155724; }
+.status-offline { background-color: #fff3cd; color: #856404; }
+.status-syncing { background-color: #d1ecf1; color: #0c5460; }
+.status-error { background-color: #f8d7da; color: #721c24; }
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* static/css/style.css (append to end) */
+
+/* static/css/style.css (NEW Dashboard Styles) */
+
+/* --- Dashboard General Layout --- */
+/* OLD CSS */
+/* NEW CSS */
+.dashboard-wrapper {
+    width: 100%;
+    min-height: 100vh; /* Changed to min-height */
+    background-color: #f0f2f5; 
+    display: flex;
+    flex-direction: column;
+    /* overflow: hidden; -- DELETED */
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    flex-grow: 1; 
+    /* overflow: hidden; -- DELETED */
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    flex-shrink: 0; /* Prevent header from shrinking */
+    z-index: 10;
+}
+    
+.dashboard-header h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--primary-blue-dark);
+    margin: 0;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px;
+    flex-grow: 1; /* Allow grid to fill remaining space */
+    overflow: hidden; /* Prevent grid from causing scrollbars */
+}
+
+.grid-item {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Important for inner scrolling */
+}
+
+.grid-item h2 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+/* --- Map & Chart Containers --- */
+.map-container {
+    padding: 0; /* Remove padding to allow map to touch edges */
+}
+.map-container h2 {
+    padding: 15px 20px;
+}
+#map {
+    flex-grow: 1; /* CRITICAL FIX: Allows map to fill the container */
+    border-radius: 0 0 12px 12px;
+    background-color: #e9ecef; /* Placeholder color while map loads */
+}
+
+#chart {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+/* --- Sidebar & Alerts --- */
+.sidebar {
+    gap: 20px;
+    background: none;
+    border: none;
+    box-shadow: none;
+}
+.alerts-panel, .stats-panel {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    border: 1px solid #e9ecef;
+    display: flex;
+    flex-direction: column;
+}
+.alerts-panel {
+    flex-basis: 55%; /* Give more space to alerts */
+}
+.stats-panel {
+    flex-basis: 45%;
+}
+
+#alerts-list {
+    list-style: none;
+    padding: 20px;
+    margin: 0;
+    overflow-y: auto; /* Allow alerts to scroll if they overflow */
+    flex-grow: 1;
+}
+
+.alert-item {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 5px solid;
+    animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.alert-item p {
+    margin: 0 0 12px 0;
+    line-height: 1.5;
+}
+
+/* --- QR Code Modal --- */
+.modal {
+    animation: fadeIn 0.3s ease-in-out;
+}
+.modal-content {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        overflow-y: auto; /* Allow vertical scrolling on mobile */
+    }
+    .map-container {
+        min-height: 400px; /* Ensure map has a good height on mobile */
+    }
+    .sidebar {
+        flex-direction: row; /* Side by side on smaller screens */
+        gap: 20px;
+    }
+    .alerts-panel, .stats-panel {
+        width: 50%;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar {
+        flex-direction: column; /* Stack again on very small screens */
+    }
+    .alerts-panel, .stats-panel {
+        width: 100%;
+    }
+    .dashboard-header h1 {
+        font-size: 1.1rem;
+    }
+}
+
+/* --- QR Code Modal UI Improvements --- */
+
+.modal-content {
+    max-width: 380px; /* Make the modal narrower */
+    padding: 25px;
+}
+
+.modal-content h2 {
+    font-size: 1.3rem;
+    color: var(--primary-blue-dark);
+    margin-bottom: 15px;
+}
+
+.modal-content p {
+    font-size: 0.95rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+#qrcode {
+    padding: 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+/* Ensure the generated image fits perfectly */
+#qrcode img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}

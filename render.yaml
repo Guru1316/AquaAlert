@@ -1,0 +1,25 @@
+services:
+  # 1. The Django Web App
+  - type: web
+    name: aqua-alert-web
+    env: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --no-input
+      python manage.py migrate
+    startCommand: "gunicorn aquaalert_project.wsgi"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true # This will create a secure, random key for you
+      - key: PYTHON_VERSION
+        value: 3.10.13
+
+  # 2. The Background Simulator
+  - type: worker
+    name: aqua-alert-simulator
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python simulator.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.13

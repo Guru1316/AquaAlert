@@ -1,0 +1,90 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-container">
+        
+        <div id="login-form-container">
+            <div class="form-header">
+                <h2>AquaAlert Login 💧</h2>
+                <p>Welcome back! Please enter your details.</p>
+            </div>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form method="POST" action="{% url 'auth_page' %}">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="login">
+                <div class="input-group">
+                    <label for="login-identifier">Phone (Worker) / Email (Official)</label>
+                    <input type="text" id="login-identifier" name="identifier" required>
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" name="password" required>
+                </div>
+                <button type="submit" class="auth-btn">Login</button>
+            </form>
+            <p class="form-toggle-text">No account? <a href="#" id="show-signup">Sign Up</a></p>
+        </div>
+
+        <div id="signup-form-container" class="hidden">
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Join AquaAlert to monitor community health.</p>
+            </div>
+            <form method="POST" action="{% url 'auth_page' %}">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="signup">
+                <div class="input-group">
+                    <label for="signup-role">I am a:</label>
+                    <select id="signup-role" name="role">
+                        <option value="worker">Health Worker</option>
+                        <option value="official">Health Official</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="signup-identifier">Phone Number (for Worker) or Email (for Official)</label>
+                    <input type="text" id="signup-identifier" name="identifier" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Password (min. 6 characters)</label>
+                    <input type="password" id="signup-password" name="password" required>
+                </div>
+                <button type="submit" class="auth-btn">Sign Up</button>
+            </form>
+            <p class="form-toggle-text">Have an account? <a href="#" id="show-login">Login</a></p>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const showSignupBtn = document.getElementById('show-signup');
+        const showLoginBtn = document.getElementById('show-login');
+        const loginForm = document.getElementById('login-form-container');
+        const signupForm = document.getElementById('signup-form-container');
+
+        showSignupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+        });
+
+        showLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signupForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        });
+    });
+</script>
+{% endblock %}

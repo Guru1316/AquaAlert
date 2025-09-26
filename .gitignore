@@ -1,0 +1,18 @@
+# Virtual Environment
+venv/
+.env
+
+# Database
+*.sqlite3
+db.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Static files collected for deployment
+staticfiles/
+
+# IDE files
+.idea/
+.vscode/

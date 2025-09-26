@@ -1,0 +1,63 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="app-wrapper">
+    <div class="app-container">
+        <header class="app-header">
+            <h3>AquaAlert Report Form</h3>
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </header>
+        <p id="user-welcome">Welcome, Worker {{ request.user.username }}!</p>
+
+        <form id="report-form">
+            {% csrf_token %}
+            <div class="input-group">
+                <label for="village">Select Village:</label>
+                <select id="village" required>
+                    <option value="" disabled selected>-- Choose a village --</option>
+                    <option value="mawlynnong_meghalaya">Mawlynnong, Meghalaya</option>
+                    <option value="ziro_arunachal">Ziro, Arunachal Pradesh</option>
+                    <option value="majuli_assam">Majuli, Assam</option>
+                    <option value="khonoma_nagaland">Khonoma, Nagaland</option>
+                    <option value="moirang_manipur">Moirang, Manipur</option>
+                    <option value="pelling_sikkim">Pelling, Sikkim</option>
+                    <option value="champhai_mizoram">Champhai, Mizoram</option>
+                    <option value="unakoti_tripura">Unakoti, Tripura</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="age-group">Age Group:</label>
+                <select id="age-group" required>
+                    <option value="0-5">0-5 years</option>
+                    <option value="6-17">6-17 years</option>
+                    <option value="18-50">18-50 years</option>
+                    <option value="50+">50+ years</option>
+                </select>
+            </div>
+
+            <fieldset class="symptoms-group">
+                <legend>Symptoms Observed:</legend>
+                <div class="checkbox-grid">
+                    <div><input type="checkbox" name="symptom" value="Diarrhea"><label>Diarrhea</label></div>
+                    <div><input type="checkbox" name="symptom" value="Vomiting"><label>Vomiting</label></div>
+                    <div><input type="checkbox" name="symptom" value="Fever"><label>Fever</label></div>
+                    <div><input type="checkbox" name="symptom" value="Nausea"><label>Nausea</label></div>
+                    <div><input type="checkbox" name="symptom" value="Stomach Cramps"><label>Stomach Cramps</label></div>
+                    <div><input type="checkbox" name="symptom" value="Dehydration"><label>Dehydration</label></div>
+                    <div><input type="checkbox" name="symptom" value="Headache"><label>Headache</label></div>
+                    <div><input type="checkbox" name="symptom" value="Jaundice"><label>Jaundice</label></div>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="submit-btn">Submit Report</button>
+        </form>
+        <div id="sync-status">Sync status will appear here.</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/worker_app.js' %}"></script>
+{% endblock %}
