@@ -22,15 +22,18 @@
 
 body {
     font-family: var(--font-family);
-    background-color: var(--light-blue-bg);
+    background-color: #f0f2f5; /* Use the dashboard background for all pages */
     color: var(--text-dark);
+}
+
+/* --- Auth Page Specific Styles --- */
+.auth-body {
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
 }
 
-/* --- Auth Page Styles --- */
 .auth-wrapper {
     width: 100%;
     padding: 20px;
@@ -128,7 +131,6 @@ body {
     display: none;
 }
 
-/* Message / Error Styling */
 .messages {
     list-style: none;
     padding: 15px;
@@ -144,19 +146,15 @@ body {
     border: 1px solid #f5c6cb;
 }
 
-/* static/css/style.css (append to end) */
-
-/* --- App Wrapper & Container --- */
+/* --- Health Worker App Container --- */
 .app-wrapper {
     width: 100%;
-    min-height: 100vh;
-    background-color: #f4f7f6;
     padding: 20px;
 }
 
 .app-container {
     max-width: 600px;
-    margin: 0 auto;
+    margin: 20px auto;
     background: var(--white);
     padding: 30px;
     border-radius: 12px;
@@ -197,7 +195,7 @@ body {
     background-color: #c82333;
 }
 
-/* --- Form Specifics --- */
+/* --- Form Specifics (Worker) --- */
 .symptoms-group {
     border: 1px solid var(--border-color);
     padding: 15px;
@@ -228,10 +226,6 @@ body {
     height: 18px;
 }
 
-.checkbox-grid label {
-    font-weight: 400;
-}
-
 .submit-btn {
     width: 100%;
     padding: 14px;
@@ -250,7 +244,6 @@ body {
     background-color: #218838;
 }
 
-/* --- Sync Status --- */
 #sync-status {
     text-align: center;
     margin-top: 20px;
@@ -264,36 +257,12 @@ body {
 .status-syncing { background-color: #d1ecf1; color: #0c5460; }
 .status-error { background-color: #f8d7da; color: #721c24; }
 
-/* Responsive adjustments */
-@media (max-width: 480px) {
-    .checkbox-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* static/css/style.css (append to end) */
-
-/* static/css/style.css (NEW Dashboard Styles) */
-
-/* --- Dashboard General Layout --- */
-/* OLD CSS */
-/* NEW CSS */
+/* --- Official Dashboard Layout --- */
 .dashboard-wrapper {
     width: 100%;
-    min-height: 100vh; /* Changed to min-height */
-    background-color: #f0f2f5; 
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* overflow: hidden; -- DELETED */
-}
-
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
-    padding: 20px;
-    flex-grow: 1; 
-    /* overflow: hidden; -- DELETED */
 }
 
 .dashboard-header {
@@ -303,7 +272,7 @@ body {
     padding: 12px 25px;
     background-color: var(--white);
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    flex-shrink: 0; /* Prevent header from shrinking */
+    flex-shrink: 0;
     z-index: 10;
 }
     
@@ -319,8 +288,7 @@ body {
     grid-template-columns: 2fr 1fr;
     gap: 20px;
     padding: 20px;
-    flex-grow: 1; /* Allow grid to fill remaining space */
-    overflow: hidden; /* Prevent grid from causing scrollbars */
+    flex-grow: 1;
 }
 
 .grid-item {
@@ -330,7 +298,7 @@ body {
     border: 1px solid #e9ecef;
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Important for inner scrolling */
+    overflow: hidden;
 }
 
 .grid-item h2 {
@@ -342,17 +310,10 @@ body {
     flex-shrink: 0;
 }
 
-/* --- Map & Chart Containers --- */
-.map-container {
-    padding: 0; /* Remove padding to allow map to touch edges */
-}
-.map-container h2 {
-    padding: 15px 20px;
-}
 #map {
-    flex-grow: 1; /* CRITICAL FIX: Allows map to fill the container */
+    flex-grow: 1;
     border-radius: 0 0 12px 12px;
-    background-color: #e9ecef; /* Placeholder color while map loads */
+    background-color: #e9ecef;
 }
 
 #chart {
@@ -360,13 +321,14 @@ body {
     flex-grow: 1;
 }
 
-/* --- Sidebar & Alerts --- */
 .sidebar {
     gap: 20px;
     background: none;
     border: none;
     box-shadow: none;
+    padding: 0;
 }
+
 .alerts-panel, .stats-panel {
     background: var(--white);
     border-radius: 12px;
@@ -375,18 +337,14 @@ body {
     display: flex;
     flex-direction: column;
 }
-.alerts-panel {
-    flex-basis: 55%; /* Give more space to alerts */
-}
-.stats-panel {
-    flex-basis: 45%;
-}
+.alerts-panel { flex-basis: 55%; }
+.stats-panel { flex-basis: 45%; }
 
 #alerts-list {
     list-style: none;
     padding: 20px;
     margin: 0;
-    overflow-y: auto; /* Allow alerts to scroll if they overflow */
+    overflow-y: auto;
     flex-grow: 1;
 }
 
@@ -397,117 +355,41 @@ body {
     border-left: 5px solid;
     animation: fadeIn 0.5s ease-in-out;
 }
+.alert-item p { margin: 0 0 12px 0; line-height: 1.5; }
+.alert-none { border-color: #6c757d; background-color: #f8f9fa; }
+.alert-predictive { border-color: #ffc107; background-color: #fff3cd; color: #856404; }
+.alert-critical { border-color: #dc3545; background-color: #f8d7da; color: #721c24; font-weight: 600; }
+.alert-critical-water { border-color: #8B0000; background-color: #f5c6cb; color: #721c24; font-weight: 700; }
+
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.alert-item p {
-    margin: 0 0 12px 0;
-    line-height: 1.5;
-}
-
-/* --- QR Code Modal --- */
+/* --- THE FINAL, CORRECTED QR CODE MODAL --- */
 .modal {
-    animation: fadeIn 0.3s ease-in-out;
-}
-.modal-content {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-/* --- Responsive --- */
-@media (max-width: 992px) {
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        overflow-y: auto; /* Allow vertical scrolling on mobile */
-    }
-    .map-container {
-        min-height: 400px; /* Ensure map has a good height on mobile */
-    }
-    .sidebar {
-        flex-direction: row; /* Side by side on smaller screens */
-        gap: 20px;
-    }
-    .alerts-panel, .stats-panel {
-        width: 50%;
-    }
-}
-@media (max-width: 768px) {
-    .sidebar {
-        flex-direction: column; /* Stack again on very small screens */
-    }
-    .alerts-panel, .stats-panel {
-        width: 100%;
-    }
-    .dashboard-header h1 {
-        font-size: 1.1rem;
-    }
-}
-
-/* --- QR Code Modal UI Improvements --- */
-
-.modal-content {
-    max-width: 380px; /* Make the modal narrower */
-    padding: 25px;
-}
-
-.modal-content h2 {
-    font-size: 1.3rem;
-    color: var(--primary-blue-dark);
-    margin-bottom: 15px;
-}
-
-.modal-content p {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-#qrcode {
-    padding: 15px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: #f8f9fa;
-}
-
-/* Ensure the generated image fits perfectly */
-#qrcode img {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    margin: 0 auto;
-}
-
-/* --- Improved QR Code Modal for Mobile --- */
-
-/* The semi-transparent background */
-.modal {
-    position: fixed; /* Stay in place */
+    position: fixed;
     z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.6); /* Darker overlay */
-    display: flex; /* Use flexbox for easy centering */
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
     justify-content: center;
     align-items: center;
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s;
 }
 
-/* The white popup box */
 .modal-content {
     background-color: #fefefe;
     padding: 25px;
     border: 1px solid #888;
-    width: 90%; /* Responsive width */
-    max-width: 380px; /* Max width on larger screens */
+    width: 90%;
+    max-width: 380px;
     border-radius: 12px;
     text-align: center;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* The close button (X) */
 .close-btn {
     position: absolute;
     top: 5px;
@@ -521,28 +403,52 @@ body {
 .modal-content h2 {
     font-size: 1.3rem;
     color: var(--primary-blue-dark);
-    margin-bottom: 15px;
 }
 
-.modal-content p {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-/* The container for the QR code image */
 #qrcode {
     padding: 15px;
+    margin-top: 15px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background-color: #f8f9fa;
-    display: inline-block; /* Allows it to shrink-to-fit */
+    display: inline-block;
 }
 
-/* Ensure the generated QR image is responsive */
 #qrcode img {
     display: block;
     width: 100%;
     height: auto;
 }
+
+/* --- RESPONSIVE ADJUSTMENTS --- */
+@media (max-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+    .map-container {
+        min-height: 400px;
+    }
+    .sidebar {
+        flex-direction: row;
+    }
+    .alerts-panel, .stats-panel {
+        width: 50%;
+    }
+}
+@media (max-width: 768px) {
+    .sidebar {
+        flex-direction: column;
+    }
+    .alerts-panel, .stats-panel {
+        width: 100%;
+    }
+    .dashboard-header h1 {
+        font-size: 1.1rem;
+    }
+}
+@media (max-width: 480px) {
+    .checkbox-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
