@@ -15,4 +15,7 @@ urlpatterns = [
 path('serviceworker.js', views.service_worker_view, name='serviceworker'),
 path('api/water-quality/', views.water_quality_api, name='water_quality_api'),
 path('api/dashboard-data/', views.dashboard_data_api, name='dashboard_data_api'),
+    
+    # ADD THIS NEW LINE FOR THE SESSION HEARTBEAT
+    path('api/session-status/', views.session_status_api, name='session_status_api'),
 ]

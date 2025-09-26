@@ -59,5 +59,6 @@
 {% endblock %}
 
 {% block scripts %}
+<script>const authUrl = "{% url 'auth_page' %}";</script>
 <script src="{% static 'js/worker_app.js' %}"></script>
 {% endblock %}

@@ -293,3 +293,15 @@ def water_quality_api(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
     return JsonResponse({'status': 'error', 'message': 'Invalid request method.'}, status=405)
+
+# core/views.py (add at the end)
+
+@login_required
+def session_status_api(request):
+    """
+    A simple API to report the current user's authentication status and role.
+    """
+    return JsonResponse({
+        'authenticated': True,
+        'role': request.user.role
+    })

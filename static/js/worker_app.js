@@ -132,3 +132,27 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('online', syncOfflineReports);
     window.addEventListener('offline', () => updateSyncStatus('You are now offline.', 'offline'));
 });
+
+// static/js/worker_app.js (add at the very end)
+
+// --- SESSION HEARTBEAT ---
+// This function checks every 7 seconds to ensure the user is still logged in as a 'worker'.
+setInterval(() => {
+    fetch('/api/session-status/')
+        .then(response => {
+            if (response.status === 403) { // 403 Forbidden means not logged in
+                return { authenticated: false, role: null };
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.authenticated || data.role !== 'worker') {
+                alert('Session conflict or logout detected. Redirecting to login page.');
+                window.location.href = authUrl;
+            }
+        })
+        .catch(error => {
+            // This might happen if the server is down, which is a different issue.
+            console.error('Session check failed:', error);
+        });
+}, 7000); // Check every 7 seconds
