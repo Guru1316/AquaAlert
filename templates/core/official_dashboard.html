@@ -10,7 +10,7 @@
     <main class="dashboard-grid">
         <div class="grid-item map-container">
             <h2>Live Health Cases (Last 48 Hours)</h2>
-            <div id="map" aria-label="Live health cases map"></div>
+            <div id="map"></div>
         </div>
         <div class="grid-item sidebar">
             <div class="alerts-panel">
@@ -21,19 +21,17 @@
             </div>
             <div class="stats-panel">
                 <h2>📊 Village Health Snapshot</h2>
-                <div id="chart" aria-hidden="false"></div>
+                <div id="chart"></div>
             </div>
         </div>
     </main>
 </div>
-
-<!-- QR Modal: start hidden; will be centered as popup on all screen sizes -->
-<div id="qr-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="qr-title">
-    <div class="modal-content" role="document">
-        <button class="close-btn" aria-label="Close QR dialog">&times;</button>
-        <h2 id="qr-title">Scan to Broadcast SMS</h2>
+<div id="qr-modal" class="modal hidden">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>Scan to Broadcast SMS</h2>
         <p>Scan this QR code with your phone to open your SMS app with a pre-filled message for the residents of the affected village.</p>
-        <div id="qrcode" aria-hidden="false"></div>
+        <div id="qrcode"></div>
     </div>
 </div>
 {% endblock %}
@@ -45,15 +43,12 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- SECTION 1: INITIALIZE ELEMENTS ---
     let chart = null;
-    // ensure map container exists and size is respected by CSS
     const map = L.map('map').setView([26.2006, 92.9376], 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
@@ -61,39 +56,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const markers = L.markerClusterGroup();
     map.addLayer(markers);
     const modal = document.getElementById('qr-modal');
-    const closeBtn = modal.querySelector('.close-btn');
+    const closeBtn = document.querySelector('.close-btn');
     const qrcodeContainer = document.getElementById('qrcode');
     const alertsList = document.getElementById('alerts-list');
 
-    // --- SECTION 2: DEFINE CORE FUNCTIONS ---
-    function openModal() {
-        modal.classList.remove('hidden');
-        // prevent background scroll while modal open
-        document.documentElement.style.overflow = 'hidden';
-        document.body.style.overflow = 'hidden';
-        // focus for accessibility
-        closeBtn.focus();
-    }
-
-    function closeModal() {
-        modal.classList.add('hidden');
-        // restore scrolling
-        document.documentElement.style.overflow = '';
-        document.body.style.overflow = '';
-        // clear QR to free memory
-        qrcodeContainer.innerHTML = '';
-    }
-
     function showQrCodeModal(villageId) {
         const villagePhoneNumbers = {
-            'mawlynnong_meghalaya': ['+918825930927', '+919488355023'],
-            'ziro_arunachal': ['+919123547685', '+917639222338'],
-            'majuli_assam': ['+917010802567', '+917339246139'],
-            'khonoma_nagaland': ['+918825930927', '+919488355023'],
-            'moirang_manipur': ['+919123547685', '+917639222338'],
-            'pelling_sikkim': ['+917010802567', '+917339246139'],
-            'champhai_mizoram': ['+918825930927', '+919488355023'],
-            'unakoti_tripura': ['+919123547685', '+917639222338']
+            'mawlynnong_meghalaya': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'ziro_arunachal': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'majuli_assam': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'khonoma_nagaland': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'moirang_manipur': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'pelling_sikkim': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'champhai_mizoram': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
+            'unakoti_tripura': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338']
         };
         const numbers = villagePhoneNumbers[villageId];
         if (!numbers || !Array.isArray(numbers) || numbers.length === 0) {
@@ -102,23 +78,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         try {
             const message = `Health Alert! Cases of water-borne illness are rising in your area. Please boil all drinking water. A health team is on its way. \n\nस्वास्थ्य चेतावनी! आपके क्षेत्र में जलजनित बीमारी के मामले बढ़ रहे हैं। कृपया पीने का सारा पानी उबालें। एक स्वास्थ्य टीम रास्ते में है।`;
-            // For multiple recipients, many phones accept comma-separated list; fallback will be single recipient if needed
             const smsUri = `sms:${numbers.join(',')}?body=${encodeURIComponent(message)}`;
-
-            qrcodeContainer.innerHTML = ''; // Clear previous QR
-
-            // Using the qrcode-generator library
-            const typeNumber = 0; // 0 = auto
-            const errorCorrectionLevel = 'M'; // Medium gives better readability for phone cameras
+            
+            qrcodeContainer.innerHTML = '';
+            
+            // **THE FINAL FIX**: Set typeNumber back to 0. This lets the library automatically
+            // choose the correct, bigger size needed for all your phone numbers. This is the robust way.
+            const typeNumber = 0; 
+            const errorCorrectionLevel = 'L';
             const qr = qrcode(typeNumber, errorCorrectionLevel);
             qr.addData(smsUri);
             qr.make();
+            qrcodeContainer.innerHTML = qr.createImgTag(4, 8); 
 
-            // createImgTag(cellSize, margin) -> returns <img/>
-            // Use a moderate cellSize and margin so it looks good on mobile and desktop
-            qrcodeContainer.innerHTML = qr.createImgTag(6, 4);
-
-            openModal();
+            modal.classList.remove('hidden');
         } catch (e) {
             console.error("QR Code generation failed:", e);
             alert("An error occurred while generating the QR code.");
@@ -129,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/dashboard-data/');
             const data = await response.json();
-            // Update Alerts
             alertsList.innerHTML = '';
             if (data.alerts && data.alerts.length > 0) {
                 data.alerts.forEach(alert => {
@@ -141,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alertsList.innerHTML = '<li class="alert-item alert-none">No new alerts. System is monitoring...</li>';
             }
-            // Update Map
             markers.clearLayers();
             if (data.map_report_data && data.map_report_data.length > 0) {
                 data.map_report_data.forEach(report => {
@@ -150,12 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }).bindPopup(`<b>${report.village}</b><br>Symptoms: ${report.symptoms}`);
                     markers.addLayer(marker);
                 });
-                // optionally fit bounds to markers (commented out: uncomment if desired)
-                // const bounds = markers.getBounds();
-                // if (bounds.isValid()) map.fitBounds(bounds.pad(0.2));
             }
-            // Update Chart
-            if (!data.chart_data || !data.chart_data.labels.length) {
+            if (!data.chart_data || data.chart_data.labels.length === 0) {
                 document.getElementById('chart').innerHTML = "<p style='text-align:center;color:#6c757d;'>No case data to display.</p>";
             } else if (!chart) {
                 chart = new frappe.Chart("#chart", {
@@ -171,33 +138,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- SECTION 3: ATTACH EVENT LISTENERS ---
     alertsList.addEventListener('click', function(event) {
         if (event.target && event.target.classList.contains('broadcast-btn')) {
             const villageId = event.target.dataset.village;
             showQrCodeModal(villageId);
         }
     });
-
-    closeBtn.addEventListener('click', closeModal);
-
-    // close on overlay click (only if clicked outside .modal-content)
-    modal.addEventListener('click', (event) => {
-        if (event.target === modal) closeModal();
-    });
-
-    // close on ESC key
-    document.addEventListener('keydown', (event) => {
-        if (event.key === "Escape" && !modal.classList.contains('hidden')) {
-            closeModal();
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+    window.addEventListener('click', (event) => {
+        if (event.target == modal) {
+            modal.classList.add('hidden');
         }
     });
 
-    // --- SECTION 4: START THE APPLICATION ---
     updateDashboard();
-    const dashboardInterval = setInterval(updateDashboard, 10000);
+    setInterval(updateDashboard, 10000);
 
-    const sessionCheckInterval = setInterval(() => {
+    setInterval(() => {
         fetch('/api/session-status/')
             .then(response => {
                 if (response.status === 403) {
@@ -212,22 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => console.error('Session check failed:', error));
-    }, 7000); // Check every 7 seconds
-
-    // Cleanup if user navigates away
-    window.addEventListener('beforeunload', () => {
-        clearInterval(dashboardInterval);
-        clearInterval(sessionCheckInterval);
-    });
-
-    // Resize handler: when container size changes call map.invalidateSize()
-    let resizeDebounce;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeDebounce);
-        resizeDebounce = setTimeout(() => {
-            map.invalidateSize();
-        }, 200);
-    });
+    }, 7000);
 });
 </script>
 {% endblock %}
