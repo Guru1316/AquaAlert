@@ -8,7 +8,10 @@ import schedule
 from datetime import datetime, timedelta
 
 # --- CONFIGURATION ---
-API_URL = "http://127.0.0.1:8000/api/water-quality/"
+# --- CONFIGURATION ---
+import os
+# The URL will be provided by an environment variable on Render
+API_URL = os.environ.get("WEB_SERVICE_URL")
 SIMULATION_INTERVAL_SECONDS = 10 # How often to send data for all villages
 VILLAGES = [
     'mawlynnong_meghalaya', 'ziro_arunachal', 'majuli_assam',
