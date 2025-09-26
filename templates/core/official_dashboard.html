@@ -85,13 +85,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             qrcodeContainer.innerHTML = ''; // Clear previous QR
             
-            // **THE FIX**: Using the new library's method to generate the QR code
-            const typeNumber = 0; // 0 means auto-detect QR code size
-            const errorCorrectionLevel = 'L'; // 'L' for Low
+            qrcodeContainer.innerHTML = '';
+            
+            // **THE FIX IS HERE**: We are now telling the library to create a bigger QR code (Version 10)
+            // This can handle more data and is more reliable than auto-detecting.
+            const typeNumber = 10; 
+            const errorCorrectionLevel = 'L';
             const qr = qrcode(typeNumber, errorCorrectionLevel);
             qr.addData(smsUri);
             qr.make();
-            // createImgTag(cellSize, margin)
             qrcodeContainer.innerHTML = qr.createImgTag(4, 8); 
 
             modal.classList.remove('hidden');
