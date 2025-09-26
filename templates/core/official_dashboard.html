@@ -43,13 +43,11 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
 <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/frappe-charts@1.2.4/dist/frappe-charts.min.iife.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/qrcode-generator/qrcode.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- SECTION 1: INITIALIZE ELEMENTS ---
     let chart = null;
     const map = L.map('map').setView([26.2006, 92.9376], 7);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -62,7 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const qrcodeContainer = document.getElementById('qrcode');
     const alertsList = document.getElementById('alerts-list');
 
-    // --- SECTION 2: DEFINE CORE FUNCTIONS ---
     function showQrCodeModal(villageId) {
         const villagePhoneNumbers = {
             'mawlynnong_meghalaya': ['+917010802567', '+918825930927','+919488355023','+919123547685','+917339246139','+917639222338'],
@@ -83,11 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const message = `Health Alert! Cases of water-borne illness are rising in your area. Please boil all drinking water. A health team is on its way. \n\nस्वास्थ्य चेतावनी! आपके क्षेत्र में जलजनित बीमारी के मामले बढ़ रहे हैं। कृपया पीने का सारा पानी उबालें। एक स्वास्थ्य टीम रास्ते में है।`;
             const smsUri = `sms:${numbers.join(',')}?body=${encodeURIComponent(message)}`;
             
-            qrcodeContainer.innerHTML = ''; // Clear previous QR
-            
             qrcodeContainer.innerHTML = '';
             
-            // **THE FIX IS HERE**: We are now telling the library to create a bigger QR code (Version 10)
+            // **THE FIX IS HERE**: We are now telling the library to create a bigger QR code (Version 10).
             // This can handle more data and is more reliable than auto-detecting.
             const typeNumber = 10; 
             const errorCorrectionLevel = 'L';
@@ -99,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('hidden');
         } catch (e) {
             console.error("QR Code generation failed:", e);
-            alert("An error occurred while generating the QR code.");
+            alert("An error occurred while generating the QR code. The data might be too long.");
         }
     }
 
@@ -107,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('/api/dashboard-data/');
             const data = await response.json();
-            // Update Alerts
             alertsList.innerHTML = '';
             if (data.alerts && data.alerts.length > 0) {
                 data.alerts.forEach(alert => {
@@ -119,7 +113,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alertsList.innerHTML = '<li class="alert-item alert-none">No new alerts. System is monitoring...</li>';
             }
-            // Update Map
             markers.clearLayers();
             if (data.map_report_data && data.map_report_data.length > 0) {
                 data.map_report_data.forEach(report => {
@@ -129,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     markers.addLayer(marker);
                 });
             }
-            // Update Chart
             if (!data.chart_data || data.chart_data.labels.length === 0) {
                 document.getElementById('chart').innerHTML = "<p style='text-align:center;color:#6c757d;'>No case data to display.</p>";
             } else if (!chart) {
@@ -146,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- SECTION 3: ATTACH EVENT LISTENERS ---
     alertsList.addEventListener('click', function(event) {
         if (event.target && event.target.classList.contains('broadcast-btn')) {
             const villageId = event.target.dataset.village;
@@ -160,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- SECTION 4: START THE APPLICATION ---
     updateDashboard();
     setInterval(updateDashboard, 10000);
 
@@ -179,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             })
             .catch(error => console.error('Session check failed:', error));
-    }, 7000); // Check every 7 seconds
+    }, 7000);
 });
 </script>
 {% endblock %}
